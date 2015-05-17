@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset='utf-8'>
+	<title>hh</title>
+</head>
+<style type="text/css">
+*{
+	margin: 0;
+	padding: 0;
+}
+.main{
+	width: 200px;
+	height: 300px;
+	border: 1px solid red;
+	margin: 0 auto;
+}
+.icon{
+	margin: 10px auto;
+	width: 100px;
+	height: 100px;
+	border-radius: 50px;
+	border: 1px solid green;
+	background-image: url(1.jpg);
+	background-size: 100%;
+	-webkit-animation:icon 10s linear infinite;
+
+}
+@-webkit-keyframes icon
+{
+	0%{
+		
+		-weblkit-transform:rotate(0deg);
+	}
+	50%{
+		
+		-weblkit-transform:rotate(180deg);
+	}
+	100%{
+		
+		-webkit-transform:rotate(360deg);
+	}
+}
+.press{
+	width: 150px;
+	height: 5px;
+	margin: 0 auto;
+	background: #ccc;
+	border-radius: 2px;
+	cursor: pointer;
+	position: relative;
+}
+.pressgo{
+	position: absolute;
+	width: 0px;
+	height: 5px;
+	left: 0;
+	top: 0;
+	background: green;
+	border-radius: 2px 0 0 2px;
+}
+.controll{
+	overflow: hidden;
+	zoom:1;
+	margin-top: 10px;
+	padding-left: 14px;
+}
+.controll div{
+	width: 22px;
+	height: 22px;
+	background-size: 100%;
+	float: left;
+	margin: 10px;
+	cursor: pointer;
+}
+.up{
+	background: url(up.png);
+}
+.stop{
+	background: url(stop.png);
+}
+.play{
+	background: url(go.png);
+}
+.next{
+	background: url(next.png);
+}
+.sound{
+	background: url(sound.png);
+}
+</style>
+<body>
+	<div class="main">
+		<div class="icon"></div>
+		<div class="press">
+			<div class="pressgo"></div>
+		</div>
+		<div class="controll">
+			<div class="up"></div>
+			<div class="stop-play stop"></div>
+			<div class="next"></div>
+			<div class="sound"></div>
+		</div>
+	</div>
+	<audio id="music" src="1.wav" controls autoplay></audio>
+</body>
+<script type="text/javascript" src="http://cdn.bootcss.com/jquery/2.1.4/jquery.js"></script>
+<script type="text/javascript">
+//点击暂停播放
+$(".stop-play").on("click",function(){
+	if($(this).hasClass("stop")){
+		$(this).removeClass("stop")
+				.addClass("play");
+		$("#music").get(0).pause();
+		$(".icon").css(
+			"-webkit-animation-play-state","paused"
+		)
+	}else{
+		$(this).removeClass("play")
+				.addClass("stop");
+		$("#music").get(0).play();
+		$(".icon").css(
+			"-webkit-animation-play-state","running"
+		)
+	}
+})
+var gogo = null;
+//进度条
+$(".press").on("click",function(ev){
+	var hadpress = ev.pageX - $(this).position().left - 25;//调整时间
+	var wid = parseInt($(".press").width());
+	var dur = $("#music").get(0).duration;//歌曲时间
+	$(".pressgo").css("width",hadpress + "px");
+	$("#music").get(0).currentTime = hadpress/wid * dur;
+	//gogo = setInterval(g,1000);
+})
+//音量
+$(".sound").on("click",function(){
+	console.log($("#music").get(0).volume)
+})
+
+$(document).ready(function(){
+	$("#music").get(0).volume = 0.5;
+	//播放进度条加载
+	if($("#music").get(0).paused){
+		gogo = setInterval(g,1000);	
+	}
+})
+
+function g(){
+if($("#music").get(0).duration == $("#music").get(0).currentTime){
+	clearInterval(gogo);
+	console.log("kk")
+}else{
+	console.log("jj")
+	var w = $("#music").get(0).currentTime/$("#music").get(0).duration *parseInt($(".press").width());
+	$(".pressgo").css("width",w + "px");
+}
+}
+</script>
+</html>
